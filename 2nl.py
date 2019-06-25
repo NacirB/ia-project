@@ -1,13 +1,17 @@
 import numpy as np
 import math
+from sklearn import preprocessing
 # sigmoid function
 def nonlin(x,deriv=False):
     if(deriv==True):
         return x*(1-x)
     return 1/(1+np.exp(-x))
+
+def ReLU(x):
+    return abs(x) * (x > 0)
     
 # input dataset
-X = np.array([ 8656346,
+X = np.array([[ 8656346,
 7678491,
 7212995,
 7059951,
@@ -20,26 +24,26 @@ X = np.array([ 8656346,
 65586,
 659997,
 289337,
-10578455])
-transformedOutput = []
-expectedTransformedOutput = []
+10578455]])
 
+print "input : ********************************\n",X
 
+print "***************************************"
+X = preprocessing.normalize(X)
+
+print "Trasformed Input : ********************************\n",X
+
+print "***************************************"
 # output expected           
-y = np.array([20743128,10638475,3021499,1064225,12101366])
+y = np.array([[20743128.0,10638475.0,3021499.0,1064225.0,12101366.0]])
 
+y = preprocessing.normalize(y)
+print len(y[0])
+print "transformed Expected Output *************************************** \n",y
+print "***************************************"
 
-for e in y :
-    expectedTransformedOutput.append((math.log10(e) - 1.0) / 8.0)
-
-print ("expectedTransformedOutput : ", expectedTransformedOutput) 
-
-# seed random numbers to make calculation
-# deterministic (just a good practice)
-np.random.seed(1)
-
-# initialize weights randomly with mean 0
-syn0 = [[1,0,0 ,0,0],
+#  weights matrix
+syn0 = np.array([[1,0,0 ,0,0],
  [0,1,0 ,0,0],
  [0.5,0.2,0.1 ,0,0.2],
  [0.4,0.1,0.15,0.05,0.3],
@@ -52,32 +56,39 @@ syn0 = [[1,0,0 ,0,0],
  [0.7,0,0.2,0.05,0.05],
  [0.5,0.1,0.4 ,0,0],
  [0.3,0.1,0 ,0.1,0.5],
- [0.25,0,0.025 ,0.025,0.7]]
+ [0.25,0,0.025 ,0.025,0.7]])
+print "weights *************************************** \n",syn0
 
-print(syn0)
-for iter in xrange(1):
+print "***************************************"
+for iter in xrange(5):
 
     # forward propagation
     l0 = X
-    l1 = np.dot(l0,syn0)
-    for e in l1:
-        transformedOutput.append((math.log10(e) - 1.0) / 8.0)
-    print ("transformedOutput : ", transformedOutput)
-    # how much did we miss?
    
-    l1_error = list(np.array(transformedOutput) - np.array(expectedTransformedOutput))
-
-    print("error",l1_error)
+    l1 = np.dot(l0,syn0)
+    #dimension l1 : (1,5)
+    print "output ********************************\n",l1
+    print "***************************************"
+    # how much did we miss?
+    l1_error = l1 - y
+   
+    print "error *************************************** \n",l1_error
+    print "***************************************"
 
     # multiply how much we missed by the 
     # slope of the sigmoid at the values in l1
     #l1_delta = l1_error * nonlin(l1,True)
-    l1_delta = l1_error * nonlin(l1,True)
     
+    print(nonlin(l1,True))
+    l1_delta = l1_error * nonlin(l1,True)
+    #dimension l1_delta (1,5)
+    print "delta *************************************** \n", l1_delta 
+    print "***************************************"     
     # update weights
     #syn0 += np.dot(l0.T,l1_delta)
-    syn0 += np.dot(l0,l1_delta)
+    print np.dot(l0.T,l1_delta)
+    syn0 += np.dot(l0.T,l1_delta)
 
-print "Output After Training:"
-print l1
+print "Matrix of weights After Training:"
+print syn0
 
