@@ -8,22 +8,16 @@ import pyodbc
 
 def getData1(conn):
     cursor = conn.cursor()
-    cursor.execute("select * from president_T1 order by [Votants] desc   ")
+    cursor.execute("select * from president_T1 order by [Libellé du département], [Libellé de la commune]")
     data1 = cursor.fetchall()
     return data1
 
-def getData2(conn, data, nb):
-    if nb > len(data1):
-        return 0
+def getData2(conn):
     cursor = conn.cursor()
-    data2 = list()
-    for i in range(nb):
-        #print("""select * from president_T2 where ([Libellé de la commune] = '""" + str(data1[i][37]) + """')""")
-        cursor.execute("""select * from president_T2 where ([Libellé de la commune] = '""" + str(data1[i][37]) + """')""")
-        res = cursor.fetchall()
-        #print(res[0])
-        data2.append(res[0])
+    cursor.execute("select * from president_T2 order  by [Libellé du département],[Libellé de la commune]")
+    data2 = cursor.fetchall()
     return data2
+
 
 
 conn = pyodbc.connect(
@@ -33,7 +27,7 @@ conn = pyodbc.connect(
     "Trusted_Connection=yes;")
 
 data1 = getData1(conn)
-data2 = getData2(conn,data1,70)
+data2 = getData2(conn)
 conn.close()
 
 
@@ -69,7 +63,7 @@ for countRow in range(0, len(data1)):
     k=11
     for i in range(33, 36):
         row[k] = data1[countRow][i]
-        k = k + 1
+        k = k + 1;
     pred_data_T1.append(row)
 
 #at this point, we have pred_data_T1
