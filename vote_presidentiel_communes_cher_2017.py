@@ -17,88 +17,6 @@ def getData2(conn):
     cursor.execute("select * from president_T2 where [Libellé du département] = 'Cher' order  by [Libellé de la commune]")
     data2 = cursor.fetchall()
     return data2
-
-
-
-conn = pyodbc.connect(
-    "Driver={SQL Server Native Client 11.0};"
-    "Server=XPSTRIET;"
-    "Database=Election;"
-    "Trusted_Connection=yes;")
-
-data1 = getData1(conn)
-data2 = getData2(conn)
-conn.close()
-
-
-pred_data_T1 = list()
-for countRow in range(0, len(data1)):
-
-    row = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    i=0
-    while (i < 33):
-        if (data1[countRow][i] == 'MACRON' and data1[countRow][i + 1] == 'Emmanuel'):
-            row[0] = data1[countRow][i + 2]
-        elif (data1[countRow][i] == 'LE PEN' and data1[countRow][i + 1] == 'Marine'):
-            row[1] = data1[countRow][i + 2]
-        elif (data1[countRow][i] == 'FILLON' and data1[countRow][i + 1] == 'François'):
-            row[2] = data1[countRow][i + 2]
-        elif (data1[countRow][i] == 'MÉLENCHON' and data1[countRow][i + 1] == 'Jean-Luc'):
-            row[3] = data1[countRow][i + 2]
-        elif (data1[countRow][i] == 'HAMON' and data1[countRow][i + 1] == 'Benoît'):
-            row[4] = data1[countRow][i + 2]
-        elif (data1[countRow][i] == 'DUPONT-AIGNAN' and data1[countRow][i + 1] == 'Nicolas'):
-            row[5] = data1[countRow][i + 2]
-        elif (data1[countRow][i] == 'LASSALLE' and data1[countRow][i + 1] == 'Jean'):
-            row[6] = data1[countRow][i + 2]
-        elif (data1[countRow][i] == 'POUTOU' and data1[countRow][i + 1] == 'Philippe'):
-            row[7] = data1[countRow][i + 2]
-        elif (data1[countRow][i] == 'ASSELINEAU' and data1[countRow][i + 1] == 'François'):
-            row[8] = data1[countRow][i + 2]
-        elif (data1[countRow][i] == 'ARTHAUD' and data1[countRow][i + 1] == 'Nathalie'):
-            row[9] = data1[countRow][i + 2]
-        elif (data1[countRow][i] == 'CHEMINADE' and data1[countRow][i + 1] == 'Jacques'):
-            row[10] = data1[countRow][i + 2]
-        i = i + 3
-    k=11
-    for i in range(33, 36):
-        row[k] = data1[countRow][i]
-        k = k + 1;
-    pred_data_T1.append(row)
-
-#at this point, we have pred_data_T1
-
-
-
-pred_data_T2 = list()
-for countRow in range(0, len(data2)):
-
-    row = [0, 0, 0, 0, 0]
-    i = 0
-    while (i < 6):
-        if (data2[countRow][i] == 'MACRON' and data2[countRow][i + 1] == 'Emmanuel'):
-            row[0] = data2[countRow][i + 2]
-        elif (data2[countRow][i] == 'LE PEN' and data2[countRow][i + 1] == 'Marine'):
-            row[1] = data2[countRow][i + 2]
-        i = i + 3
-    k = 2
-    for i in range(6,9):
-        row[k] = data2[countRow][i]
-        k = k + 1
-    pred_data_T2.append(row)
-
-#at this point, we have pred_data_T2
-
-test1 = list()
-for i in range(0,100):
-    test1.append(pred_data_T1[i])
-test2 = list()
-for i in range(0,100):
-    test2.append(pred_data_T2[i])
-
-syn1 = []
-min_error =10000
-
 def all_process(x,w,y,nb_of_iterations,learning_rate):
     global min_error
     global syn1
@@ -158,9 +76,91 @@ def delta_w(w_k, x, t, learning_rate):
     """Update function delta w"""
     return -learning_rate * np.mean(gradient(w_k, x, t))
 
+
+conn = pyodbc.connect(
+    "Driver={SQL Server Native Client 11.0};"
+    "Server=XPSTRIET;"
+    "Database=Election;"
+    "Trusted_Connection=yes;")
+
+data1 = getData1(conn)
+data2 = getData2(conn)
+conn.close()
+
+
+pred_data_T1 = list()
+for countRow in range(0, len(data1)):
+
+    row = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    i=0
+    while (i < 33):
+        if (data1[countRow][i] == 'MACRON' and data1[countRow][i + 1] == 'Emmanuel'):
+            row[0] = data1[countRow][i + 2]
+        elif (data1[countRow][i] == 'LE PEN' and data1[countRow][i + 1] == 'Marine'):
+            row[1] = data1[countRow][i + 2]
+        elif (data1[countRow][i] == 'FILLON' and data1[countRow][i + 1] == 'François'):
+            row[2] = data1[countRow][i + 2]
+        elif (data1[countRow][i] == 'MÉLENCHON' and data1[countRow][i + 1] == 'Jean-Luc'):
+            row[3] = data1[countRow][i + 2]
+        elif (data1[countRow][i] == 'HAMON' and data1[countRow][i + 1] == 'Benoît'):
+            row[4] = data1[countRow][i + 2]
+        elif (data1[countRow][i] == 'DUPONT-AIGNAN' and data1[countRow][i + 1] == 'Nicolas'):
+            row[5] = data1[countRow][i + 2]
+        elif (data1[countRow][i] == 'LASSALLE' and data1[countRow][i + 1] == 'Jean'):
+            row[6] = data1[countRow][i + 2]
+        elif (data1[countRow][i] == 'POUTOU' and data1[countRow][i + 1] == 'Philippe'):
+            row[7] = data1[countRow][i + 2]
+        elif (data1[countRow][i] == 'ASSELINEAU' and data1[countRow][i + 1] == 'François'):
+            row[8] = data1[countRow][i + 2]
+        elif (data1[countRow][i] == 'ARTHAUD' and data1[countRow][i + 1] == 'Nathalie'):
+            row[9] = data1[countRow][i + 2]
+        elif (data1[countRow][i] == 'CHEMINADE' and data1[countRow][i + 1] == 'Jacques'):
+            row[10] = data1[countRow][i + 2]
+        i = i + 3
+    k=11
+    for i in range(33, 36):
+        row[k] = data1[countRow][i]
+        k = k + 1
+    pred_data_T1.append(row)
+
+#at this point, we have pred_data_T1
+
+
+
+pred_data_T2 = list()
+for countRow in range(0, len(data2)):
+
+    row = [0, 0, 0, 0, 0]
+    i = 0
+    while (i < 6):
+        if (data2[countRow][i] == 'MACRON' and data2[countRow][i + 1] == 'Emmanuel'):
+            row[0] = data2[countRow][i + 2]
+        elif (data2[countRow][i] == 'LE PEN' and data2[countRow][i + 1] == 'Marine'):
+            row[1] = data2[countRow][i + 2]
+        i = i + 3
+    k = 2
+    for i in range(6,9):
+        row[k] = data2[countRow][i]
+        k = k + 1
+    pred_data_T2.append(row)
+
+#at this point, we have pred_data_T2
+
+test1 = list()
+for i in range(0,100):
+    test1.append(pred_data_T1[i])
+test2 = list()
+for i in range(0,100):
+    test2.append(pred_data_T2[i])
+
+
+
+
 # input dataset
 learning_rate = 0.5
 nb_of_iterations = 3
+syn1 = []
+min_error =10000
 
 
 #  weights matrix
